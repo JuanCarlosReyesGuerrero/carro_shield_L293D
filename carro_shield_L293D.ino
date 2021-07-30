@@ -14,7 +14,7 @@
 #define TRIG_PIN A0
 #define ECHO_PIN A1
 #define MAX_DISTANCE 200
-#define MAX_SPEED 190 // sets speed of DC  motors
+#define MAX_SPEED 190  // sets speed of DC  motors
 #define MAX_SPEED_OFFSET 20
 
 NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
@@ -62,11 +62,9 @@ void setup() {
 
   //Serial.println("Avanza 1");
   myservo.attach(9);
-
 }
 
-void loop()
-{
+void loop() {
 
   //int distanceR = 0;
   //int distanceL =  0;
@@ -77,14 +75,12 @@ void loop()
 
   int distance = readDistance();
 
-  if (distance >= distanceMin)
-  {
+  if (distance >= distanceMin) {
     moveForward();
     //Serial.println("Avanza");
   }
 
-  while (distance >= stopDist)
-  {
+  while (distance >= stopDist) {
     distance = readDistance();
     delay(250);
   }
@@ -96,8 +92,7 @@ void loop()
 
   Serial.print(turnDir);
 
-  switch (turnDir)
-  {
+  switch (turnDir) {
     case 0:
       //turnLeft(400);
       Serial.println("Gira izquierda");
@@ -114,11 +109,9 @@ void loop()
 
   //int a = readDistance();
   //Serial.println(a);
-
 }
 
-int lookRight()
-{
+int lookRight() {
   myservo.write(30);
   delay(500);
   int distance = readDistance();
@@ -127,8 +120,7 @@ int lookRight()
   return distance;
 }
 
-int lookLeft()
-{
+int lookLeft() {
   myservo.write(150);
   delay(500);
   int distance = readDistance();
@@ -153,19 +145,16 @@ void moveStop() {
 
   motor2.run(RELEASE);
   motor3.run(RELEASE);
-
 }
 
-void moveForward()
-{
+void moveForward() {
   motor2.run(FORWARD);
   motor3.run(FORWARD);
 }
 
 
 
-void turnRight(int duration)
-{
+void turnRight(int duration) {
   motor2.setSpeed(motorSpeed + turnSpeed);
   motor3.setSpeed(motorSpeed + motorOffset + turnSpeed);
 
@@ -181,8 +170,7 @@ void turnRight(int duration)
   motor3.run(RELEASE);
 }
 
-void turnLeft(int duration)
-{
+void turnLeft(int duration) {
   motor2.setSpeed(motorSpeed + motorOffset + turnSpeed);
   motor3.setSpeed(motorSpeed + turnSpeed);
 
@@ -200,8 +188,7 @@ void turnLeft(int duration)
 
 
 
-int checkDirection()
-{
+int checkDirection() {
   /*
     int distances [2] = {0, 0};
     int turnDir = 1;
@@ -231,16 +218,16 @@ int checkDirection()
     return turnDir;
   */
 
-  int distances [2] = {0, 0};
+  int distances[2] = { 0, 0 };
   int turnDir = 1;
 
   myservo.write(180);
   delay(1000);
-  distances [0] = readDistance();
+  distances[0] = readDistance();
 
   myservo.write(0);
   delay(1000);
-  distances [1] = readDistance();
+  distances[1] = readDistance();
 
   //Serial.println(distances [0]);
   //Serial.println(distances [1]);
@@ -251,17 +238,14 @@ int checkDirection()
     turnDir = 2;
 
   return turnDir;
-
 }
 
 
 
 
 
-void accelerate()
-{
-  for (int i = 0; i < motorSpeed; i++)
-  {
+void accelerate() {
+  for (int i = 0; i < motorSpeed; i++) {
     motor2.setSpeed(i);
     motor3.setSpeed(i + motorOffset);
 
@@ -269,10 +253,8 @@ void accelerate()
   }
 }
 
-void decelerate()
-{
-  for (int i = motorSpeed; i != 0; i--)
-  {
+void decelerate() {
+  for (int i = motorSpeed; i != 0; i--) {
     motor2.setSpeed(i);
     motor3.setSpeed(i + motorOffset);
 
