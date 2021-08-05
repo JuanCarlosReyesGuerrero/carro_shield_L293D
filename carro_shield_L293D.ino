@@ -13,8 +13,11 @@
 #define TRIG_PIN A0
 #define ECHO_PIN A1
 #define MAX_DISTANCE 200
-#define MAX_SPEED 190 // sets speed of DC  motors
+#define MAX_SPEED 190                                 // sets speed of DC  motors
 #define MAX_SPEED_OFFSET 20
+
+#define leftSensor A2
+#define rightSensor A3
 
 NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
 
@@ -29,10 +32,17 @@ boolean goesForward = false;
 int distance = 100;
 int speedSet = 0;
 
+int leftValue = HIGH;                               //By default, HIGH means that there are no obstacle
+int rightValue = HIGH;                              //By default, HIGH means that there are no obstacle
+
 void setup() {
 
   myservo.attach(9);
   myservo.write(90);
+
+  pinMode(leftSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+
   delay(2000);
   distance = readPing();
   delay(100);
@@ -45,9 +55,36 @@ void setup() {
 }
 
 void loop() {
+
+  leftValue = digitalRead(leftSensor);
+  rightValue = digitalRead(rightSensor);
+
   int distanceR = 0;
   int distanceL =  0;
   delay(40);
+
+  if (leftValue == LOW || rightValue == LOW)
+  {
+    moveStop();
+    delay(100);
+    moveBackward();
+    delay(300);
+    moveStop();
+    delay(200);
+    distanceR = lookRight();
+    delay(200);
+    distanceL = lookLeft();
+    delay(200);
+
+    //Serial.println("OBSTACLE LEFT!!, OBSTACLE LEFT!!");
+    //}
+    //else if (rightValue == LOW) {
+    //  Serial.println("OBSTACLE RIGHT!!, OBSTACLE RIGHT!!");
+    //} else
+    //{
+    //  moveForward();
+  }
+  delay(200);
 
   if (distance <= 30)
   {
@@ -80,7 +117,7 @@ void loop() {
 
 int lookRight()
 {
-  myservo.write(50);
+  myservo.write(0);
   delay(500);
   int distance = readPing();
   delay(100);
@@ -90,7 +127,7 @@ int lookRight()
 
 int lookLeft()
 {
-  myservo.write(170);
+  myservo.write(180);
   delay(500);
   int distance = readPing();
   delay(100);
